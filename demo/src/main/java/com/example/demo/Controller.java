@@ -1,5 +1,5 @@
 //вместо слов в фигурных скобках мы можем туда записать всё, что подходит под это слово, например {text} - String, {number} - int
-//ВВЕСТИ Remove-item alias:curl ПЕРЕД НАЧАЛОМ РАБОТЫ, НЕ ВАЖНО ЧТО ЭТО И КАК РАБОТАЕТ, ГЛАВНОЕ ЧТО РАБОТАЕТ
+    //ВВЕСТИ Remove-item alias:curl ПЕРЕД НАЧАЛОМ РАБОТЫ, НЕ ВАЖНО ЧТО ЭТО И КАК РАБОТАЕТ, ГЛАВНОЕ ЧТО РАБОТАЕТ
 package com.example.demo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -138,19 +138,25 @@ public class Controller
 
     //curl -X GET http://localhost:8080/users
     @GetMapping("users")
-    public ResponseEntity<String> getUser()
+    public ResponseEntity<List<User>> getUser()
     {
-        return ResponseEntity.ok(users.toString());
+        return ResponseEntity.ok(users);
     }
 
     //curl -X POST -H "Content-Type: application/json" -d {name} -d {age}  http://localhost:8080/users
-    @PostMapping("users")
+    /*@PostMapping("users")
     public ResponseEntity<Void> addUser(@RequestBody String тфьу_фпу)
     {
         users.add(new User(тфьу_фпу));
         return ResponseEntity.accepted().build();
+    }*/
+    // curl -X POST -H "Content-Type: application/json" -d '{"name":"Vlad","age":239}'  http://localhost:8080/users
+    @PostMapping("users")
+    public ResponseEntity<Void> addUser(@RequestBody User user)
+    {
+        users.add(user);
+        return ResponseEntity.accepted().build();
     }
-
     //curl -X DELETE http://localhost:8080/users/{index}
     @DeleteMapping("users/{index}")
     public ResponseEntity<Void> deleteUser(@PathVariable("index") Integer index)
