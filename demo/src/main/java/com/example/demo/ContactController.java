@@ -1,12 +1,28 @@
 package com.example.demo;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.directory.SearchControls;
 import java.util.*;
+class Paging
+{
+    int number;
+    int limit;
+    public Paging(int number, int limit)
+    {
+        this.number = number;
+        this.limit = limit;
+    }
 
+    @Override
+    public String toString() {
+        return "Paging{" +
+                "number=" + number +
+                ", limit=" + limit +
+                '}';
+    }
+}
 @RestController
 public class ContactController
 {
@@ -104,18 +120,30 @@ public class ContactController
     class NumberComparator implements Comparator<Contact> {
         @Override
         public int compare(Contact a, Contact b) {
-            return a.number < b.number ? -1 : a.number == b.number ? 0 : 1;
+            return Integer.compare(a.number, b.number);
         }
     }
-    @GetMapping ("contacts/paging/{number}")
-    public ResponseEntity<String> pagingContact(@PathVariable("number") Integer number, @RequestBody Integer limit)
+
+    public static String firstNChars(String str, int n) {
+        if (str == null) {
+            return null;
+        }
+
+        return str.length() < n ? str : str.substring(0, n);
+    }
+
+    @GetMapping ("contacts/paging")
+    public ResponseEntity<String> pagingContact(@RequestBody Paging page)
     {
+        int number = page.number;
+        int limit = page.limit;
         if (number < 0 || limit <= 0)
         {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(contacts.get(number-1).toString().substring(limit>=contacts.get(number-1).toString().length()? contacts.get(number-1).toString().length()-1 : limit));
+        return ResponseEntity.ok(firstNChars(contacts.get(page.number-1).toString(),limit));
     }
+
 
 
 }
