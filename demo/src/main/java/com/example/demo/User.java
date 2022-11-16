@@ -1,10 +1,13 @@
 package com.example.demo;
 
+import java.util.ArrayList;
+
 public class User
 {
     String name;
     int age;
 
+    ArrayList<Topic> comments;
     public User()
     {
         this.age = 17;
@@ -16,10 +19,15 @@ public class User
         this.name = name;
     }
 
-    public User(String name)
-    {
-        this.age = Integer.parseInt(name.split("&")[1]);
-        this.name = name.split("&")[0];
+    public ArrayList<Topic> getComments() {
+        return comments;
+    }
+
+    public void addComments(ArrayList<Topic> comments) {
+        for (Topic s:comments)
+        {
+
+        }
     }
 
     public String getName() {
