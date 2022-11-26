@@ -26,14 +26,22 @@ public class TopicController
         }
         else
         {
-            int a = 0;
-            for (int i = 0; i < topics.size(); i++) {
+            int a = 0, b = 0;
+            for (int i = 0; i < topics.size(); i++)
+            {
                 if (topics.get(i).user.name.equals(topic.user.name) && topics.get(i).user.age == topic.user.age) {
-                    for (int j = 0; j < user.size(); j++) {
-                        if (user.get(i).comments.get(j).name.equals(topic.name)) {
-                            user.get(i).comments.get(j).comment.addAll(topic.comment);
-                        } else
-                            user.get(i).comments.add(topic);
+                    for (int j = 0; j < user.size(); j++)
+                    {
+                        for (int k = 0; k < user.get(j).comments.size(); k++) {
+
+                            if (user.get(j).comments.get(k).name.equals(topic.name))
+                            {
+                                user.get(j).comments.get(k).comment.addAll(topic.comment);
+                                b++;
+                            }
+                        }
+                        if (b == 0)
+                                user.get(i).comments.add(topic);
                     }
                     a++;
                 }
@@ -48,9 +56,9 @@ public class TopicController
 
     //curl -X GET http://localhost:8080/topic/
     @GetMapping("topic")
-    public ResponseEntity<List<Topic>> getTopics()
+    public ResponseEntity<List<User>> getTopics()
     {
-        return ResponseEntity.ok(topics);
+        return ResponseEntity.ok(user);
     }
 
     //curl -X DELETE http://localhost:8080/topic/{index}

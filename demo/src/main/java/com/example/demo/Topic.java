@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import org.springframework.http.ResponseEntity;
+
 import java.util.ArrayList;
 
 public class Topic {
@@ -12,15 +14,15 @@ public class Topic {
     {
     }
 
-    public Topic(String name, ArrayList<String> comment, User user)
+    public Topic(String name, ArrayList<String> comment, ResponseEntity<User> user)
     {
         this.name = name;
         this.comment = comment;
-        this.user = user;
-        Topic top = new Topic();
+        this.user = user.getBody();
+        /*Topic top = new Topic();
         top.setName(name);
         top.comment = comment;
-        user.comments.add(top);
+        user.comments.add(top);*/
     }
 
     public ArrayList<String> getComment() {

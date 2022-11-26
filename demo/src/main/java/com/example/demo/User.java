@@ -23,11 +23,9 @@ public class User
         return comments;
     }
 
-    public void addComments(ArrayList<Topic> comments) {
-        for (Topic s:comments)
-        {
-
-        }
+    public void addComments(ArrayList<Topic> comments)
+    {
+        this.comments.addAll(comments);
     }
 
     public String getName() {
