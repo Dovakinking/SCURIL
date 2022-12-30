@@ -11,21 +11,22 @@ import java.util.List;
 public class CustomerController
 {
 	private final List<Customer> customers = new ArrayList<>();
+	private final List<CustomerPublic> pcustomers = new ArrayList<>();
 	private int count = 1;
 
 	//curl -X GET  http://localhost:8080/customer/all
 	@GetMapping("customer/all")
-	public ResponseEntity<List<Customer>> getCustomers(
+	public ResponseEntity<List<CustomerPublic>> getCustomers(
 			@RequestParam(value = "sort", required = false) String sortBy,
 			@RequestParam(value = "direction", required = false) String direction,
 			@RequestParam(value = "paging", required = false) String paging,
 			@RequestParam(value = "limit", required = false) Integer limit,
 			@RequestParam(value = "index", required = false) Integer index)
 	{
-		List<Customer> list = customers;
+		List<CustomerPublic> list = pcustomers;
 		if(sortBy == null && direction == null && paging == null)
 		{
-			return ResponseEntity.ok(customers);
+			return ResponseEntity.ok(pcustomers);
 		}
 		if(sortBy !=null)
 		{
@@ -40,7 +41,7 @@ public class CustomerController
 					Collections.sort(list, new AgeComparator());
 					break;
 				default:
-					return ResponseEntity.ok(customers);
+					return ResponseEntity.ok(pcustomers);
 			}
 		}
 		if(direction !=null)
@@ -54,7 +55,7 @@ public class CustomerController
 					Collections.sort(list, new DownIdComparator());
 					break;
 				default:
-					return ResponseEntity.ok(customers);
+					return ResponseEntity.ok(pcustomers);
 			}
 		}
 		if(paging !=null)
@@ -63,27 +64,27 @@ public class CustomerController
 		}
 		return null;
 	}
-	static class DownIdComparator implements Comparator<Customer> {
+	static class DownIdComparator implements Comparator<CustomerPublic> {
 		@Override
-		public int compare(Customer a, Customer b) {
+		public int compare(CustomerPublic a, CustomerPublic b) {
 			return Integer.compare((int)-a.getId(),(int) -b.getId());
 		}
 	}
-	static class UsernameComparator implements Comparator<Customer> {
-		public int compare(Customer a, Customer b) {
+	static class UsernameComparator implements Comparator<CustomerPublic> {
+		public int compare(CustomerPublic a, CustomerPublic b) {
 			return a.username.compareToIgnoreCase(b.username);
 		}
 	}
 
-	static class IdComparator implements Comparator<Customer> {
+	static class IdComparator implements Comparator<CustomerPublic> {
 		@Override
-		public int compare(Customer a, Customer b) {
+		public int compare(CustomerPublic a, CustomerPublic b) {
 			return Integer.compare((int)a.getId(),(int) b.getId());
 		}
 	}
-	static class AgeComparator implements Comparator<Customer> {
+	static class AgeComparator implements Comparator<CustomerPublic> {
 		@Override
-		public int compare(Customer a, Customer b) {
+		public int compare(CustomerPublic a, CustomerPublic b) {
 			return Integer.compare(a.getAge(), b.getAge());
 		}
 	}
@@ -105,6 +106,7 @@ public class CustomerController
 			}
 			customer.id = count;
 			customers.add(customer);
+			pcustomers.add(new CustomerPublic(customer));
 			count++;
 			return ResponseEntity.accepted().build();
 		}
@@ -114,9 +116,9 @@ public class CustomerController
 
 	//curl -X GET http://localhost:8080/customer?id=1
 	@GetMapping("customer")
-	public ResponseEntity<Customer> getCustomer(@RequestParam Integer id)
+	public ResponseEntity<CustomerPublic> getCustomer(@RequestParam Integer id)
 	{
-		for (Customer c : customers)
+		for (CustomerPublic c : pcustomers)
 		{
 			if(c.getId() == id)
 			{
@@ -136,6 +138,7 @@ public class CustomerController
 			if(c.getId() == id)
 			{
 				customers.remove(i);
+				pcustomers.remove(i);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 			i++;
@@ -158,6 +161,9 @@ public class CustomerController
 					customer.setId(customers.get(i).getId());
 					customers.remove(i);
 					customers.add(i, customer);
+					pcustomers.remove(i);
+					pcustomers.add(i, new CustomerPublic(customer));
+
 					return new ResponseEntity<>(HttpStatus.OK);
 				}
 				i++;
@@ -170,9 +176,9 @@ public class CustomerController
 
 	//curl -X GET 'http://localhost:8080/customer/age?age=1'
 	@GetMapping("customer/age")
-	public ResponseEntity<List<Customer>> choiseAgeCustomer(@RequestParam Integer age) {
-		List<Customer> list = new ArrayList<>();
-		for (Customer c : customers) {
+	public ResponseEntity<List<CustomerPublic>> choiseAgeCustomer(@RequestParam Integer age) {
+		List<CustomerPublic> list = new ArrayList<>();
+		for (CustomerPublic c : pcustomers) {
 			if (Math.abs(c.getAge() - age) <= 5)
 			{
 				list.add(c);

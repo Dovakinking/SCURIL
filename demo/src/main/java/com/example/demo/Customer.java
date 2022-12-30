@@ -3,11 +3,9 @@ package com.example.demo;
 public class Customer
 {
     String username;
-    String password;
+    private String password;
     int age;
-
     long id;
-
     public Customer(String username, String password, int age) {
         this.username = username;
         this.password = password;
