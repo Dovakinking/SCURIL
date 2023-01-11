@@ -1,15 +1,34 @@
 package com.example.demo;
 
-public class Customer
-{
-    String username;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+@Entity
+@Table(name = "customers")
+public class Customer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long identificator;
+    @Column(name = "username")
+    private String username;
+    @Column(name = "age")
+    private Integer age;
+    @Column(name = "id")
+    private long id;
+    @Column(name = "password")
     private String password;
-    int age;
-    long id;
+
+    Customer(){}
     public Customer(String username, String password, int age) {
         this.username = username;
         this.password = password;
         this.age = age;
+    }
+    public long getIdentificator() {
+        return identificator;
     }
 
     public String getUsername() {

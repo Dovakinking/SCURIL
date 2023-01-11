@@ -95,7 +95,7 @@ public class CustomerController
 //		"age": 17
 //}'
 	@PostMapping("customer")
-	public ResponseEntity<Void> addCustomers(@RequestBody Customer customer, @RequestParam String repeatPassword)
+	public Customer addCustomers(@RequestBody Customer customer, @RequestParam String repeatPassword)
 	{
 		if (customer.getPassword().equals(repeatPassword))
 		{
@@ -104,11 +104,12 @@ public class CustomerController
 					return new ResponseEntity<>(HttpStatus.CONFLICT);
 				}
 			}
-			customer.id = count;
+			customer.setId(count);
 			customers.add(customer);
 			pcustomers.add(new CustomerPublic(customer));
 			count++;
-			return ResponseEntity.accepted().build();
+			return CustomerRepository.save();
+
 		}
 		else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
